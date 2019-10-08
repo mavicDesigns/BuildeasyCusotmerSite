@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const http = axios.create({
-    baseURL: process.env.VUE_APP_baseUrl,
+    baseURL: 'https://secure-forest-32865.herokuapp.com/',
     headers:{
         Authorization: 'Bearer {token}'
     }
