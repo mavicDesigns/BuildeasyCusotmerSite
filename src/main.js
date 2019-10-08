@@ -7,6 +7,7 @@ import Vuelidate from "vuelidate";
 import Vuesax from "vuesax";
 import "vuesax/dist/vuesax.css";
 import "material-design-icons/iconfont/material-icons.css";
+import axios from 'axios'
 
 
 
@@ -14,6 +15,7 @@ import "material-design-icons/iconfont/material-icons.css";
 Vue.use(Vuelidate);
 Vue.use(Vuesax);
 Vue.config.productionTip = false;
+axios.defaults.withCredentials = false;
 
 new Vue({
     router: router,
