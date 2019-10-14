@@ -30,7 +30,7 @@ export const Cart = {
     actions:{
 
 
-        placeOrder({ commit, state }, user) {
+        placeOrder({ state }, user) {
             const cart = state.cart;
             return new Promise((resolve, reject) => {
 

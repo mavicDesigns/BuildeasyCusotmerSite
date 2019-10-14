@@ -1,8 +1,9 @@
 <template>
 
-    <div class="model homepage">
+    <div class=" homepage">
 
         <div class="hero">
+
         </div>
 
     </div>
@@ -15,7 +16,7 @@
     .homepage .hero{
         background-image: url("/img/hero-bg.jpg") ;
         width: 100%;
-        height: 500px;
+        height: 530px;
     }
     
 </style>
