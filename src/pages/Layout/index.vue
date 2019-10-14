@@ -3,7 +3,7 @@
     <div class="model">
 
         <header-x></header-x>
-        <title-x :title="title"></title-x>
+        <title-x v-if="title !== ''" :title="title"></title-x>
 
         <router-view @titleChanged="titleChanged"></router-view>
 

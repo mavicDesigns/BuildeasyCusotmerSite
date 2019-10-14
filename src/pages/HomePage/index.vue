@@ -1,10 +1,24 @@
 <template>
 
-    <div class="model">
-        <h1>FGHJ</h1>
+    <div class="model homepage">
+
+        <div class="hero">
+        </div>
+
     </div>
 
 </template>
+
+<style>
+    .homepage{}
+    
+    .homepage .hero{
+        background-image: url("/img/hero-bg.jpg") ;
+        width: 100%;
+        height: 500px;
+    }
+    
+</style>
 
 <script>
 
@@ -14,7 +28,7 @@
         components: {},
 
         mounted(){
-            this.$emit('titleChanged', 'HEY There')
+            this.$emit('titleChanged', '')
         }
 
 
