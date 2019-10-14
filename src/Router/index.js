@@ -13,12 +13,10 @@ const router = new Router({ routes: routes });
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if(store.getters['Auth/isAuthenticated']){
-
-
             next();
             return
         }
-        next('/login?next=' + from.path)
+        next('/login?next=' + to.path)
     }else {
         next()
     }

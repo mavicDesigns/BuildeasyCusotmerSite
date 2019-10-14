@@ -31,7 +31,8 @@ export const Auth = {
     },
     getters:{
       isAuthenticated: state => !!state.token,
-      authStatus: state => state.status
+      authStatus: state => state.status,
+        getUser: state => state.user
     },
     actions:{
         AUTH_REQUEST: ({commit, dispatch}, user) => {
@@ -41,7 +42,6 @@ export const Auth = {
                     .then(response => {
                         const token = response.data.token;
                         localStorage.setItem('token', token);
-                        http.defaults.headers['Authorization'] = 'Bearer {'+ token +'}';
                         commit('AUTH_SUCCESS', token); // Add token to state
                         dispatch('USER_REQUEST');
                         resolve(response);
@@ -60,24 +60,22 @@ export const Auth = {
                 commit('AUTH_LOGOUT');
                 localStorage.removeItem('token');
 
-                delete http.headers.Authorization;
+
                 resolve()
             })
         },
 
         USER_REQUEST: ({commit, dispatch}) => {
             return new Promise((resolve, reject) => {
-                http.get(
-                    "customers/users/getAuthenticated?api_key=wQtATJ9qgge9N347sWM6&token=" +
-                    localStorage.getItem("token")
-                )
+                http({url: "customers/users/getAuthenticated?api_key=wQtATJ9qgge9N347sWM6&token=" +
+                localStorage.getItem("token"), method:'GET'})
                     .then(resp => {
                         commit('USER_REQUEST', resp.data.user);
                         resolve(resp.data.user)
                     })
                     .catch(err => {
-                        dispatch("AUTH_LOGOUT");
-                        reject(err)
+                        dispatch('AUTH_LOGOUT');
+                        reject(err);
                     });
             })
         }

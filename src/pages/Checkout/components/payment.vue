@@ -51,7 +51,7 @@
                     </vs-row>
                     <vs-row vs-justify="space-around">
                         <vs-col vs-lg="3" vs-sm="12">
-                            <vs-button   @click="handlePayment" type="filled" style="width:100%;" color="primary">Verify</vs-button>
+                            <vs-button   @click="completeOrder" type="filled" style="width:100%;" color="primary">Verify</vs-button>
                         </vs-col>
                     </vs-row>
                 </div>
@@ -86,8 +86,7 @@
 
     import { required } from 'vuelidate/lib/validators'
     import {http} from '../../../_helpers/http/http'
-    import {Transaction, Card} from 'paystack-js'
-    import {mapActions,mapGetters} from 'vuex'
+    import {mapActions,mapGetters, mapMutations} from 'vuex'
 
 
     export default {
@@ -138,6 +137,9 @@
                  'cartProducts',
                  'cartTotal'
             ]),
+            ...mapGetters('Auth',[
+                 'getUser',
+            ]),
 
         },
         watch: {
@@ -149,76 +151,115 @@
         methods:{
             ...mapActions('Auth',['USER_REQUEST','AUTH_LOGOUT']),
             ...mapActions('Cart',['placeOrder']),
+            ...mapMutations('Cart',['setCart']),
 
             completeOrder(){
                 let self = this;
+                this.$vs.loading();
                 this.USER_REQUEST()
                     .then(res => {
                         if(res === null){
                             http({url:"/customers/register/"+ localStorage.getItem('token') + "?api_key=hehehe" ,method: 'POST',data: JSON.stringify(self.$store.state.address)})
                                 .then((resp) => {
-                                    self.placeOrder( resp.data.customer, self.$store.state.address )
-                                        .then(() => { this.$router.push('/dashboard')})
-                                        .catch(()  => {})
+                                    self.placeOrder( resp.data.customer, self.$store.state.address );
                                 })
                                 .catch(() => {})
                         }else {
-                            alert(' Customer');
-                            this.placeOrder( res)
-                                .then(() => { this.$router.push('/dashboard')})
-                                .catch(()  => {})
+                            alert('Customer');
+                            this.placeOrder(res)
+                                .then((res) =>  {
+                                    this.$vs.loading.close();
+                                    this.handlePayment(res.data.totalPrice,res.data.orders, res.data.user)
+                                });
                         }
                     })
                     .catch(() => {
                         this.AUTH_LOGOUT()
                             .then(() => this.$router.push('/login'))
-                    })
+                    }).finally( () =>{
+
+                })
 
 
 
             },
 
-            async handlePayment(){
+            async handlePayment(amount, payload, user) {
 
-                this.$vs.loading();
 
-                try{
+                // eslint-disable-next-line
+                const handler = PaystackPop.setup({
 
-                    const requestData = {
-                        email: 'osanmisola@gmail.com',
-                        amount: parseInt(this.cartTotal), // amount in kobo
-                        key: 'pk_live_528d167def4c2f1f91f6f1da991fc72f57b89885',
-                    };
+                    key: 'pk_test_6a5bd38bed3603ec619a2a3cdd2a4d2a69e91d81',
+                    email: user.email,
+                    amount: amount * 100,
+                    currency: "NGN",
+                    ref: Math.random().toString(36).substring(7), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                    metadata: {
+                        custom_fields: [
+                            {
+                                display_name: "Mobile Number",
+                                variable_name: "mobile_number",
+                                value: "+2348012345678"
+                            }
+                        ]
+                    },
+                    callback: function(response){
 
-                    const transaction =  await Transaction.request(requestData);
+                        // console.log(response);
+                        const the = this;
 
-                    const card = new Card({
-                        number: '4084084084084081',
-                        cvv: '408',
-                        month: '12',
-                        year: '20',
-                    });
+                        if (response.status === 'success'){
 
-// Payment method instances provide validation functions that
-// you can use to check for validaty before setting payment method
-                    if (card.isValid()) {
-                        try {
-                            transaction.setPaymentMethod('card', card);
-                        } catch(e) {
-                            alert(JSON.stringify(e))
+                            http({url: '/createOrder/payTransaction?api_key=4ntbqhy2g0mc', method:'POST', data: JSON.parse(payload)})
+                                .then(() => {
+                                    localStorage.setItem("carts", JSON.stringify([]));
+                                    the.setCart(); //Update cart states
+                                    the.$swal({
+                                        title: 'Done',
+                                        text: 'Your Order is on it\'s way, Proceed to dashboard to track',
+                                        type: 'Success',
+                                        confirmButtonText: 'Continue',
+                                    })
+                                }).catch((err) => {
+                                    alert(JSON.stringify(err))
+                                })
+
+
+                        }else {
+
+                            this.$swal({
+                                title: 'Could not complete',
+                                text: 'There is something wrong with the Network Please Try again',
+                                type: 'error',
+                                confirmButtonText: 'Try Again',
+                                showCloseButton: true,
+                            })
+
                         }
+
+
+                    },
+                    onClose: function(){
+                        const the = this;
+                        http({url: '/createOrder/endTransaction?api_key=wuwu', method:'Post', data:payload})
+                            .then(() => {
+                                the.$swal({
+                                    title: 'You\'ve Just Ended the transaction',
+                                    text: 'You can\'t revert your action',
+                                    type: 'warning',
+                                    confirmButtonText: 'Try Again',
+                                    showCloseButton: true,
+                                })
+                            }).catch(() => {
+
+                        })
                     }
-
-                    this.$vs.loading.close();
-
-                }catch (e){
-                    alert(JSON.stringify(e))
-                }finally{
-                    this.$vs.loading.close();
-                }
-
+                });
+                handler.openIframe();
 
             }
+
 
         }
 

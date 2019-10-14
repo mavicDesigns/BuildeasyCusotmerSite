@@ -5,6 +5,10 @@ import Product from '../pages/Product/index.vue'
 import Checkout from '../pages/Checkout/index.vue'
 import Login from '../pages/Login/index.vue'
 
+import DashboardLayout from '../pages/Dashboard/layout.vue'
+import Dashboard from '../pages/Dashboard/index.vue'
+import Order from '../pages/Orders/index.vue'
+
 
 
 export const routes = [
@@ -23,8 +27,11 @@ export const routes = [
     { path: "/login", name: "login", component: Login,},
     {
         path: "/dashboard",
+        component: DashboardLayout,
         meta: { requiresAuth: true },
         children: [
+            { path: "/", name: "dashboard", component: Dashboard,},
+            { path: "orders", name: "orders", component: Order,},
 
         ]
     },

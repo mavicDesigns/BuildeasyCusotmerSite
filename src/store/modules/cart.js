@@ -12,6 +12,10 @@ export const Cart = {
         setCart(state) {
             state.cart = JSON.parse(localStorage.getItem("carts")) || [];
         },
+        setTemporaryAddress(state, address){
+
+            state.address = address
+        },
     },
 
     getters:{
@@ -25,12 +29,14 @@ export const Cart = {
     },
     actions:{
 
-        placeOrder({ commit }, user) {
-            const cart = this.state.cart;
+
+        placeOrder({ commit, state }, user) {
+            const cart = state.cart;
             return new Promise((resolve, reject) => {
 
-                let payload = this.state.address;
+
                 let cartLoad = [];
+                let payload = state.address;
 
                 //Iterate through cart and place each
                 cart.forEach(async item => {
@@ -47,24 +53,22 @@ export const Cart = {
                     cartLoad.push(order);
                 });
 
-               http({
+                http({
                     url: "/createOrder?api_key=56y",
                     data: JSON.stringify(cartLoad),
                     method: "POST"
                 })
                     .then(res => {
-                        localStorage.setItem("carts", JSON.stringify([]));
-                        commit("setCart"); //Update cart states
+
                         resolve(res)
                     })
                     .catch(err => {
-                        alert(JSON.stringify(cartLoad));
+                        alert(JSON.stringify(err));
                         reject(err);
                     });
 
             });
         },
-
 
         addProductToCart: ({ commit }, product) => {
             if (localStorage.getItem("carts") === null) {

@@ -22,7 +22,10 @@
                     </div>
 
                     <div class="form-group" align="center">
-                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span v-if="isLoading == false">Login</span>
+                            <span v-if="isLoading == true">Login</span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -79,7 +82,8 @@
                     email: '',
                     password: ''
                 },
-                error: ''
+                error: '',
+                isLoading: false,
             }
         },
 

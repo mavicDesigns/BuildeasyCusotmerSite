@@ -101,7 +101,7 @@
     </div>
     <div class="stepper-controls">
         <div class="left"><button  :disabled="!prevCanMove"  @click="stepper = 1" class="btn btn-danger">Prev</button> </div>
-        <div class="right"><button :disabled="$v.form.$invalid"  @click="stepper = 3" class="btn btn-danger">Next</button> </div>
+        <div class="right"><button :disabled="$v.form.$invalid"  @click="storeCustomer()" class="btn btn-danger">Next</button> </div>
     </div>
 
     </div>
@@ -126,6 +126,7 @@
 <script>
 
     import { required  } from 'vuelidate/lib/validators'
+    import {mapMutations} from 'vuex'
     import gmapsInit from '../../../_helpers/map/gmaps'
 
     export default {
@@ -217,7 +218,17 @@
             stepper: function (val) {
                 this.$emit('update:stepper', val)
             }
+        },
+
+        methods:{
+            ...mapMutations('Cart', ['setTemporaryAddress']),
+
+            storeCustomer(){
+                this.setTemporaryAddress(this.form);
+                this.stepper = 3
+            }
         }
+
     }
 
 </script>

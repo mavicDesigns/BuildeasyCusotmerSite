@@ -32,7 +32,7 @@
                            <div class="prod-q">
                                <span><i class="fas fa-plus"></i> </span><span class="quan">5</span> <span><i class="fas fa-minus"></i></span>
                            </div>
-                           <div class="prod-button"><a href="javascript:void(0)" @click="addProductToCart(product)" class="btn btn-danger btn-block">Add To Cart</a> </div>
+                           <div class="prod-button"><a href="javascript:void(0)" @click="addToCart(product)" class="btn btn-danger btn-block">{{product | isInCart }}</a> </div>
                        </div>
                    </div>
                 </div>
@@ -105,7 +105,7 @@
 <script>
 
     import {http} from '../../_helpers/http/http'
-    import {mapActions} from 'vuex'
+    import {mapActions, mapState} from 'vuex'
     import PicZoom from 'vue-piczoom'
     import Slick from 'vue-slick'
 
@@ -125,6 +125,10 @@
                 this.getProduct()
             }
         },
+        computed:{
+
+
+        },
 
         mounted(){
             this.$emit('titleChanged', '')
@@ -132,6 +136,10 @@
 
         data(){
             return{
+                ...mapState('Cart', [{
+                    cart: state  => state.cart
+                }]),
+
                 product:{
                 },
                 imageView:'',
@@ -148,6 +156,16 @@
             ...mapActions('Cart', ['addProductToCart']),
             getImage(val){
                 this.imageView =  val
+            },
+            addToCart(product){
+
+                this.addProductToCart(product);
+
+                this.$swal({
+                    title:'added to cart',
+                    type:'success',
+                    toast: true
+                });
             },
 
 
