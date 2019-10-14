@@ -17,11 +17,11 @@
                         <a class="nav-link" href="javascript:void (0)"><router-link to="/store">Store</router-link></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1"><router-link to="/Checkout">Checkout</router-link></a>
+                        <a class="nav-link" href="#" ><router-link to="/Checkout">Checkout</router-link></a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1"><router-link to="/Checkout">Cart</router-link></a>
+                        <a class="nav-link" href="#"><router-link to="/Checkout">Cart</router-link></a>
                     </li>
                 </ul>
 

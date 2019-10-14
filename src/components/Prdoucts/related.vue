@@ -1,6 +1,10 @@
 <template>
 
-    <div class="model store">
+    <div class="model mt-5  store">
+
+        <div class="title-bar" align="center">
+            <h1>Related Products</h1>
+        </div>
 
         <div class="container">
             <div class="row">
@@ -23,20 +27,17 @@
                     </div>
                 </div>
 
-                <div v-if="isLoading == true" v-for="x in 5" class="col-lg-3 col-md-6 col-sm-2">
-                    <br>
-                    <content-loader
-                            :height="1400"
-                            :width="1000"
-                            :speed="2"
-                            primaryColor="#f3f3f3"
-                            secondaryColor="#ecebeb"
-                    >
-                        <rect x="27.11" y="0.98" rx="5" ry="5" width="100%" height="100%" />
-                    </content-loader>
-                </div>
-
-
+                <content-loader v-if="isLoading == true"
+                                :height="475"
+                                :width="900"
+                                :speed="2"
+                                primaryColor="#f3f3f3"
+                                secondaryColor="#ecebeb"
+                >
+                    <rect x="12.69" y="69" rx="5" ry="5" width="256" height="332" />
+                    <rect x="295.69" y="65" rx="5" ry="5" width="256" height="332" />
+                    <rect x="577.69" y="62" rx="5" ry="5" width="256" height="332" />
+                </content-loader>
 
 
 
@@ -51,10 +52,10 @@
 </template>
 <style>
 
-    .model{
-        margin-bottom: 60px;
-    }
 
+     .title-bar h1{
+        font-weight: 900;
+    }
 
     .product-col{
         height: 400px;
@@ -114,15 +115,15 @@
 
     }
     .qick-view-button{
-            position: absolute;
-            visibility: hidden;
-            background: white;
-            opacity: 0;
-            transition: all ease 0.5s;
-            bottom: 0;
-            margin-bottom: 0;
-            width: 100%;
-        }
+        position: absolute;
+        visibility: hidden;
+        background: white;
+        opacity: 0;
+        transition: all ease 0.5s;
+        bottom: 0;
+        margin-bottom: 0;
+        width: 100%;
+    }
 
     .qick-view-button a{
         border-radius: 0;
@@ -164,21 +165,20 @@
     export default {
 
         components:{
-          ContentLoader
+            ContentLoader
         },
+        props:['product'],
 
         mounted(){
-            this.$emit('titleChanged', 'Welcome to Our Lovely Store');
+            this.$emit('titleChanged', '');
             this.getProducts();
-            this.scroll();
         },
 
         data(){
             return{
                 products:[],
                 currentPage: 1,
-                isLoading:true,
-                canLoadMore: true,
+                isLoading:false,
             }
         },
 
@@ -186,17 +186,7 @@
 
             ...mapActions('Cart', ['addProductToCart']),
 
-            scroll () {
-                window.onscroll = () => {
-                    let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
 
-                    if (bottomOfWindow) {
-                       if(this.canLoadMore === true){
-                           this.updateProd()
-                       }
-                    }
-                };
-            },
 
             addToCart(product){
 
@@ -215,29 +205,24 @@
                 const self = this;
                 this.isLoading = true;
 
-               http.get('products?api_key=4ntbqhy2g0mc&limit=1&page=' + self.currentPage)
-                   .then((response) => {
-                       self.isLoading = false;
-                       let reData = response.data.allProducts.data;
-                       if(reData.length < 1){
-                           self.currentPage--;
-                           self.canLoadMore = false;
-                       }
+                http.get('products?api_key=4ntbqhy2g0mc&limit=1&page=' + self.currentPage)
+                    .then((response) => {
+                        let reData = response.data.allProducts.data;
+                        if(reData.length < 1){
+                            self.currentPage--;
+                        }
                         self.products = [...self.products, ...response.data.allProducts.data];
-
+                        self.isLoading = false;
                     }).catch(() => {
 
-                   self.isLoading = false;
+                    self.isLoading = false;
 
 
                 })
 
             },
 
-            updateProd(){
-                this.currentPage++;
-                this.getProducts();
-            }
+
         }
     }
 

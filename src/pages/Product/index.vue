@@ -38,6 +38,8 @@
                 </div>
 
             </div>
+
+            <related :product="product"></related>
         </div>
 
 
@@ -108,13 +110,14 @@
     import {mapActions, mapState} from 'vuex'
     import PicZoom from 'vue-piczoom'
     import Slick from 'vue-slick'
-
+    import Related from '../../components/Prdoucts/related.vue'
 
 
 
     export default {
         components:{
           PicZoom,
+            Related,
           Slick
         },
 
@@ -164,7 +167,6 @@
                 this.$swal({
                     title:'added to cart',
                     type:'success',
-                    toast: true
                 });
             },
 
