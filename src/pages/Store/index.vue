@@ -23,18 +23,20 @@
                     </div>
                 </div>
 
-                <div v-if="isLoading == true" v-for="x in 5" class="col-lg-3 col-md-6 col-sm-2">
-                    <br>
-                    <content-loader
-                            :height="1400"
-                            :width="1000"
-                            :speed="2"
-                            primaryColor="#f3f3f3"
-                            secondaryColor="#ecebeb"
-                    >
-                        <rect x="27.11" y="0.98" rx="5" ry="5" width="100%" height="100%" />
-                    </content-loader>
-                </div>
+                            <!-- //eslint-disable-next-line -->
+                    <div v-if="isLoading == true"  v-for="x in 5" :key="x" class="col-lg-3 col-md-6 col-sm-2">
+                        <br>
+                        <content-loader
+                                :height="1400"
+                                :width="1000"
+                                :speed="2"
+                                primaryColor="#f3f3f3"
+                                secondaryColor="#ecebeb"
+                        >
+                            <rect x="27.11" y="0.98" rx="5" ry="5" width="100%" height="100%" />
+                        </content-loader>
+                    </div>
+
 
 
 

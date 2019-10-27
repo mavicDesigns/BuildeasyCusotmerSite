@@ -8,6 +8,8 @@ import Login from '../pages/Login/index.vue'
 import DashboardLayout from '../pages/Dashboard/layout.vue'
 import Dashboard from '../pages/Dashboard/index.vue'
 import Order from '../pages/Orders/index.vue'
+import Register from '../pages/Register/index.vue'
+import OrderView from '../pages/Orders/view.vue'
 
 
 
@@ -25,15 +27,17 @@ export const routes = [
         ]
     },
     { path: "/login", name: "login", component: Login,},
+    { path: "/Register", name: "register", component: Register,},
     {
         path: "/dashboard",
         component: DashboardLayout,
-        meta: { requiresAuth: true },
         children: [
             { path: "/", name: "dashboard", component: Dashboard,},
             { path: "orders", name: "orders", component: Order,},
+            { path: "orders/:order_id", name: "orderView", component: OrderView,},
 
-        ]
+        ],
+        meta: { requiresAuth: true },
     },
 
 ];

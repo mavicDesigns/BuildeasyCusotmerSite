@@ -10,6 +10,8 @@ import "material-design-icons/iconfont/material-icons.css";
 import axios from 'axios'
 import VueSweetalert2 from 'vue-sweetalert2'
 import {isInCart} from './_helpers/Cart'
+import {currency} from './_helpers/filters/currency'
+import {status} from './_helpers/filters/status'
 
 
 
@@ -20,6 +22,8 @@ const options = {
 };
 
 Vue.filter('isInCart',isInCart);
+Vue.filter("currency", currency);
+Vue.filter("status", status);
 Vue.use(VueSweetalert2, options);
 Vue.use(Vuelidate);
 Vue.use(Vuesax);

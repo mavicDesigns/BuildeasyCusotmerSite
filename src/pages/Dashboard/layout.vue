@@ -42,7 +42,7 @@
             ...mapActions('Auth', ['USER_REQUEST'])
         },
 
-        created(){
+        mounted(){
             this.USER_REQUEST();
         }
 

@@ -2,12 +2,12 @@
 
     <div class="container p-5 order-table">
         <vs-table
-                multiple
+                :sst="true"
                 v-model="selected"
                 :data="orders">
             <template slot="header">
               <div class="table-header">
-                  <h4>Exclusive Datatable Plugin
+                  <h4>Review Your Orders
                   </h4>
               </div>
             </template>
@@ -31,24 +31,25 @@
 
             <template slot-scope="{data}">
                 <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data" >
-                    <vs-td :data="data[indextr].email">
-                        {{data[indextr].email}}
+                    <vs-td :data="data[indextr].order_id">
+                        #{{data[indextr].order_id}}
                     </vs-td>
 
-                    <vs-td :data="data[indextr].username">
-                        {{data[indextr].username}}
+                    <vs-td :data="data[indextr].buyer">
+                        {{data[indextr].buyer}}
                     </vs-td>
 
-                    <vs-td :data="data[indextr].website">
-                        {{data[indextr].id}}
+                    <vs-td :data="data[indextr].created_at">
+                        {{data[indextr].created_at}}
                     </vs-td>
 
-                    <vs-td :data="data[indextr].id">
-                        {{data[indextr].id}}
+                    <vs-td  :data="data[indextr].status" align="center">
+                        <span :class="'s-badge s-badge'+data[indextr].status">{{data[indextr].status | status}}</span>
                     </vs-td>
 
                     <vs-td>
-                        <span ></span>
+                        <span class=""><i class="act-icons fas fa-ellipsis-h"></i></span>
+                        <span class=""><router-link :to="'orders/'+data[indextr].order_id"><i class="act-icons far fa-edit"></i></router-link></span>
                     </vs-td>
                 </vs-tr>
             </template>
@@ -57,12 +58,31 @@
 
         </vs-table>
 
-        <span class="alert" v-if="orders.length > 0">{{orders.length}}</span>
 
     </div>
 </template>
 
 <style>
+
+    .s-badge{
+        border-radius: 40px;
+        color: #fff;
+        font-size: 12px;
+        padding: 7px;
+    }
+
+    .s-badge2{
+        background: red;
+    }
+
+    .s-badge3{
+        background: #2f805b;
+    }
+
+    .act-icons{
+        color: #93a2dd;
+        margin: 10px;
+    }
 
     .table-header{
         background: #fff;
@@ -96,9 +116,14 @@
         },
 
         async mounted(){
-            this.getOrders()
+
+            await this.USER_REQUEST();
+
+            let user =  this.getUser;
+
+            this.getOrders(user.user_id)
                 .then((res) => {
-                    alert(JSON.stringify(res))
+                    this.orders = [...this.orders, ...res];
                 })
                 .catch(() => {
 

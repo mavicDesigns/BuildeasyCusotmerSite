@@ -5,15 +5,15 @@
         <div class="">
 
             <div class="titlebar">
-                <h4>Metronic</h4>
+                <h4>Buildeasy</h4>
             </div>
 
             <div class="">
 
                 <ul class="linkList">
-                    <li class="list-item active"><i class="fas fa-tachometer-alt"></i> <a href="#" class="list-link">Dashboard</a> </li>
-                    <li class="list-item"><i class="fas fa-shopping-bag"></i><a href="#" class="list-link">Orders</a> </li>
-                    <li class="list-item"><i class="fas fa-cogs"></i><a href="#" class="list-link">Setting</a> </li>
+                    <li class="list-item active"><router-link to="/dashboard"><i class="fas fa-tachometer-alt"></i> <a href="javascript:void(0)" class="list-link">Dashboard</a> </router-link></li>
+                    <li class="list-item"><router-link to="/dashboard/orders"><i class="fas fa-tachometer-alt"></i> <a href="javascript:void(0)" class="list-link">Orders</a> </router-link></li>
+                    <li class="list-item"><router-link to="/dashboard/settings"><i class="fas fa-tachometer-alt"></i> <a href="javascript:void(0)" class="list-link">Settings</a> </router-link></li>
                 </ul>
 
 

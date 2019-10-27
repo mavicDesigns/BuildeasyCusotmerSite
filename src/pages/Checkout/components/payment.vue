@@ -170,13 +170,16 @@
                                 .then((res) =>  {
                                     this.$vs.loading.close();
                                     this.handlePayment(res.data.totalPrice,res.data.orders, res.data.user)
-                                });
+                                }).finally(() => {
+
+                            });
                         }
                     })
                     .catch(() => {
                         this.AUTH_LOGOUT()
                             .then(() => this.$router.push('/login'))
                     }).finally( () =>{
+                    this.$vs.loading.close();
 
                 })
 
@@ -204,25 +207,26 @@
                             }
                         ]
                     },
-                    callback: function(response){
+                    callback: async function(response){
 
                         // console.log(response);
                         const the = this;
 
                         if (response.status === 'success'){
+                            alert('Done');
 
-                            http({url: '/createOrder/payTransaction?api_key=4ntbqhy2g0mc', method:'POST', data: JSON.parse(payload)})
+                            http.post('/createOrder/payTransaction?api_key=4ntbqhy2g0mc',payload)
                                 .then(() => {
                                     localStorage.setItem("carts", JSON.stringify([]));
                                     the.setCart(); //Update cart states
-                                    the.$swal({
-                                        title: 'Done',
-                                        text: 'Your Order is on it\'s way, Proceed to dashboard to track',
-                                        type: 'Success',
-                                        confirmButtonText: 'Continue',
-                                    })
+
                                 }).catch((err) => {
                                     alert(JSON.stringify(err))
+                                the.$swal({
+                                    title: 'Done',
+                                    text: 'Your Order is on it\'s way, Proceed to dashboard to track',
+                                    type: 'Success',
+                                })
                                 })
 
 

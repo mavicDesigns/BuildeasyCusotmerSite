@@ -4,6 +4,10 @@
 
         <div class="hero">
 
+            <div class="hero-heading">
+                <h2>A Better Way To connect suppliers for Your Building Projects </h2>
+            </div>
+
         </div>
 
     </div>
@@ -14,7 +18,6 @@
     .homepage{}
     
     .homepage .hero{
-        background-image: url("/img/hero-bg.jpg") ;
         width: 100%;
         height: 530px;
     }

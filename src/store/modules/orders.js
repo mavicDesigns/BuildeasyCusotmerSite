@@ -1,35 +1,39 @@
 
 import {http} from '../../_helpers/http/http'
-import {mapActions, mapState} from 'vuex'
+import { mapState} from 'vuex'
 
 export const Orders = {
     namespaced: true,
     state: {
         ...mapState('Auth', {
             user:state => state.user
-        })
+        }),
+
+        status: '',
     },
 
-    mutations: {},
+    mutations: {
+        received(state){
+            state.status = 'done'
+        }
+    },
 
     getters: {},
     actions: {
-        ...mapActions('Auth', ['USER_REQUEST']),
 
-        async getOrders({dispatch, state}) {
+         getOrders({commit},user_id) {
 
-            await dispatch('USER_REQUEST');
 
             return new Promise((resolve, reject) => {
                 http.get(
-                    "/customers/data/orders?&page=1&limit=5&buyers_id=" + state.user.user_id + "&api_key=shs"
+                    "customers/data/orders?api_key=4ntbqhy2g0mc&page=1&limit=10&buyers_id="+ user_id
                 )
                     .then(response => {
-                        alert(JSON.stringify(response.data.buyers_orders.data))
+                        alert(JSON.stringify(response.data.buyers_orders.data));
+                        commit('received');
                         resolve(response.data.buyers_orders.data);
                     })
                     .catch(err => {
-                        alert(JSON.stringify(err))
                         reject(err);
                     });
             });
