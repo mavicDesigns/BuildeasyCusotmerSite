@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const http = axios.create({
-    baseURL: 'http://localhost/buildeasyApi/public/',
+    baseURL: 'http://api.buildeasy.xyz/',
     withCredentials: false,
    
 });
