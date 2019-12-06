@@ -5,6 +5,7 @@ export const Cart = {
     namespaced: true,
     state:{
         cart: [],
+        address:{}
     },
 
     mutations:{
@@ -14,7 +15,7 @@ export const Cart = {
         },
         setTemporaryAddress(state, address){
 
-            state.address = address
+            state.address = address;
         },
     },
 

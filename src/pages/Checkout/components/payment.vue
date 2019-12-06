@@ -86,7 +86,7 @@
 
     import { required } from 'vuelidate/lib/validators'
     import {http} from '../../../_helpers/http/http'
-    import {mapActions,mapGetters, mapMutations} from 'vuex'
+    import {mapActions,mapGetters, mapMutations, mapState} from 'vuex'
 
 
     export default {
@@ -95,6 +95,9 @@
 
         data(){
             return{
+                ...mapState('Cart', [{
+                    tempoAddress: state  => state.cart
+                }]),
                 value1:'',
                 stepper: 3,
                 card:{
@@ -159,11 +162,15 @@
                 this.USER_REQUEST()
                     .then(res => {
                         if(res === null){
-                            http({url:"/customers/register/"+ localStorage.getItem('token') + "?api_key=hehehe" ,method: 'POST',data: JSON.stringify(self.$store.state.address)})
+                            alert(JSON.stringify(self.tempoAddress));
+                            http({url:"/customers/register/"+ localStorage.getItem('token') + "?api_key=hehehe" ,method: 'POST',data: JSON.stringify(self.tempoAddress)})
                                 .then((resp) => {
-                                    self.placeOrder( resp.data.customer, self.$store.state.address );
+                                    self.placeOrder( resp.data.customer);
                                 })
-                                .catch(() => {})
+                                .catch((err) => {
+                                    this.$vs.loading.close();
+                                    alert(JSON.stringify(err.response))
+                                })
                         }else {
                             alert('Customer');
                             this.placeOrder(res)
@@ -179,7 +186,6 @@
                         this.AUTH_LOGOUT()
                             .then(() => this.$router.push('/login'))
                     }).finally( () =>{
-                    this.$vs.loading.close();
 
                 })
 

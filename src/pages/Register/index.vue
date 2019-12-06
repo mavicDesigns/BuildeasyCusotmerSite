@@ -66,7 +66,7 @@
                                 </div>
 
                                 <div class="form-group" align="left">
-                                    <vs-button :disabled="this.$v.newUser.$invalid" style="width: 100%"  size="large" color="primary" >Sign-up</vs-button>
+                                    <button :disabled="$v.newUser.$invalid" style="width: 100%" type="submit"  size="large" color="primary" >Sign-up</button>
                                 </div>
                             </form>
                         </vs-card>
@@ -148,8 +148,8 @@
 
     import { required, minLength,sameAs ,between, email } from 'vuelidate/lib/validators'
     import HeaderX from '../../components/header/index.vue'
-    import axios from 'axios'
-
+    import {http} from '../../_helpers/http/http'
+    import {mapActions} from 'vuex'
     export default {
 
         components: {HeaderX},
@@ -195,7 +195,11 @@
             }
         },
         methods:{
+            ...mapActions('Auth',['AUTH_REQUEST']),
             register(){
+
+                alert('reg')
+
 
                 if(!this.$v.newUser.$invalid){
                     this.respError.email = [];
@@ -204,19 +208,21 @@
                     const self = this;
 
 
-                    axios.post(this.baseUrl+'/api/createUser?api_key='+ this.apiKey,JSON.stringify(self.newUser))
+
+                    http.post('/api/createUser?api_key='+ this.apiKey,JSON.stringify(self.newUser))
                         .then((resp) => {
                             let email = resp.data.user.email;
                             let password = self.newUser.password;
-                            self.$store.commit('setNewUser',self.newUser);
-                            self.$store.dispatch('login',{email, password}).then(() => self.$router.push('/register/path_2')).catch((err) => { self.$router.push('/login')})
+                            this.AUTH_REQUEST({email, password})
+                                .then((resp) => { alert('hdsd')})
+                                .catch((err) => alert(JSON.stringify(err)))
                         })
                         .catch((err) => {
-                            NProgress.done();
                             let errorObj = err.response.data.error_message;
                             self.respError.email.push(errorObj.email[0]);
                             self.respError.name.push(errorObj.name[0]);
 
+                            alert(JSON.stringify(err))
 
                         })
                 }
